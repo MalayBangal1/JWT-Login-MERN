@@ -7,6 +7,7 @@ function Login() {
 
     const navigate = useNavigate();
     const { loginData, setLoginData } = useContext(LoginContext);
+    //console.log(loginData);
 
     const [passShow, setPassShow] = useState(false);
     const [impval, setImpval] = useState({
