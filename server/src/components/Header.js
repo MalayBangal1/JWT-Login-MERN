@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 function Header() {
   const { loginData, setLoginData } = useContext(LoginContext);
   //setLoginData("hello");
-  console.log(loginData);
+  //console.log(loginData);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -19,6 +19,36 @@ function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const logoutUser = async ()=>{
+
+    try {
+      let token = localStorage.getItem("userDataToken");
+    //console.log(token);
+    const res = await fetch("http://localhost:3006/logout",{
+      method: "GET",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization":token,
+        Accept:"application/json"
+      },
+      credentials:"include"
+    })
+    const data = await res.json();
+    //console.log(data);
+    if(data.status !== 201 ){
+      console.log("error");
+    }else{
+      console.log("User Logout");
+      localStorage.removeItem("userDataToken");
+      setLoginData(false);
+      navigate("/")
+    }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
 
   const goLogin = () =>{
     navigate('/');
@@ -71,11 +101,10 @@ function Header() {
                     handleClose()
                     goDash()
                   }}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
                   <MenuItem onClick={()=>{
+                    logoutUser()
                     handleClose()
-                    goLogin()
-                  }}>Login</MenuItem>
+                    }}>Logout</MenuItem>
                 </div>
               ): (
                 <div>

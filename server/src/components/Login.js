@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./mix.css";
+import { LoginContext } from './Context/Context';
 
 function Login() {
 
     const navigate = useNavigate();
+    const { loginData, setLoginData } = useContext(LoginContext);
 
     const [passShow, setPassShow] = useState(false);
     const [impval, setImpval] = useState({
@@ -44,6 +46,7 @@ function Login() {
             const res = await data.json();
             //console.log(res);
             if (res.status === 201){
+                console.log("User Login");
                 localStorage.setItem("userDataToken",res.result.token);
                 navigate('/dash');
                 setImpval({...impval,email:"",password:""});
@@ -74,7 +77,13 @@ function Login() {
                         </div>
                         </div>
                     </div>
-                    <button onClick={addUserdata} className='btn'>Login</button>
+                    {
+                        loginData?(
+                            <button disabled={true} onClick={addUserdata} className='btn'>Login</button>
+                        ):(
+                            <button onClick={addUserdata} className='btn'>Login</button>
+                        )
+                    }
                     <p>Don't have Account? <NavLink to="/register">Sign Up</NavLink> </p>
                 </form>
             </div>
